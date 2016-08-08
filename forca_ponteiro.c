@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-char palavrasecreta[20];
-char chutes[26];
-int tentativas = 0;
-
 void abertura(){
 	printf("/****************/\n");
     printf("/ Jogo de Forca */\n");
@@ -17,17 +13,17 @@ void abertura(){
 // int* tentativas -> a variavel 'tentativas' aramazena um endereco
 // (*tentativas) -> essa experessao devolve o conteudo do endereco armazenado na variavel tentativas
 // array nao precisa, pois em c todo array eh um ponteiro. o valor da variavel de array e o endereco do primeiro item
-void chuta(){
+void chuta(char chutes[20], int* tentativas){
 	
 	char chute;
 	scanf(" %c", &chute);
 
-	chutes[tentativas] = chute;
-	tentativas++; //se nao tiver o (*) vai incrementar o endereco de memoria
+	chutes[(*tentativas)] = chute;
+	(*tentativas)++; //se nao tiver o (*) vai incrementar o endereco de memoria
 }
 
 
-int jaachou(char letra){
+int jaachou(char letra, char chutes[26], int tentativas){
 	int achou = 0;
 	for (int j = 0; j < tentativas; j++){
 		if(chutes[j] == letra){
@@ -38,10 +34,10 @@ int jaachou(char letra){
 	return achou;
 }
 
-void desenhaforca(){
+void desenhaforca(char palavrasecreta[20], char chutes[26], int tentativas){
 	for(int i =0; i< strlen(palavrasecreta); i++){
 
-		int achou = jaachou(palavrasecreta[i]);
+		int achou = jaachou(palavrasecreta[i], chutes, tentativas);
 
 		if (achou){
 			printf("%c ", palavrasecreta[i]);
@@ -53,22 +49,28 @@ void desenhaforca(){
 	printf("\n");
 }
 
-void escolhepalavra(){
+void escolhepalavra(char palavrasecreta[20]){
 	sprintf(palavrasecreta, "MELANCIA");
 }
+
 
 int main(){
 
 	abertura();
 
-	escolhepalavra();
+	char palavrasecreta[20];
+
+	escolhepalavra(palavrasecreta);
 
 	int acertou = 0;
 	int enforcou = 0;
 
+	char chutes[26];
+	int tentativas = 0;
+
 	do {
-		desenhaforca();
-		chuta();
+		desenhaforca(palavrasecreta, chutes, tentativas);
+		chuta(chutes, &tentativas);
 
 	} while(!acertou && !enforcou);
 
