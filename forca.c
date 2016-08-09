@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <time.h>
 #include "forca.h"
 
 char palavrasecreta[20];
@@ -55,7 +57,26 @@ void desenhaforca(){
 }
 
 void escolhepalavra(){
-	sprintf(palavrasecreta, "MELANCIA");
+	FILE* f;
+	f = fopen("palavras.txt","r");
+	
+	if(f == 0){
+		printf("Banco de palavras nao disponivel. \n");
+		exit(1);
+	}
+
+	int qtdpalavras;
+	fscanf(f, "%d", &qtdpalavras);
+
+	srand(time(0));
+	int randomico = rand() % qtdpalavras;
+
+	for(int i = 0; i <= randomico; i++){
+		fscanf(f, "%s", palavrasecreta);
+	}
+
+	fclose(f);
+
 }
 
 int enforcou(){
@@ -99,6 +120,43 @@ int jachutou(char letra){
 	return achou;
 }
 
+
+void adicionapalavra(){
+
+	char quer;
+
+	printf("Deseja adicionar palavra no jogo? (S/N) \n");
+	scanf(" %c", &quer);
+
+	if (quer == 'S'){
+
+		char novapalavra[20];
+
+		printf("Digite a nova palavra: \n");
+		scanf("%s", novapalavra);
+
+		FILE* f;
+		f = fopen("palavras.txt", "r+");
+		if (f == 0){
+			printf("Banco de palavras nao encontrado. \n");
+			exit(1);
+		}
+
+		int qtd;
+		fscanf(f, "%d", &qtd);
+		qtd++;
+
+		fseek(f, 0, SEEK_SET);
+		fprintf(f, "%d", qtd);
+
+		fseek(f, 0, SEEK_END);
+		fprintf(f, "\n%s", novapalavra);
+
+		fclose(f);
+
+	}
+}
+
 int main(){
 
 	abertura();
@@ -112,5 +170,7 @@ int main(){
 		chuta();
 
 	} while(!ganhou() && !enforcou());
+
+	adicionapalavra();
 
 }

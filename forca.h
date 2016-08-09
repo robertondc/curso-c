@@ -6,3 +6,4 @@ void escolhepalavra();
 int enforcou();
 int jachutou(char letra);
 int ganhou();
+void adicionapalavra();
