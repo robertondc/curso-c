@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <string.h>
+#include "forca.h"
 
 char palavrasecreta[20];
 char chutes[26];
-int tentativas = 0;
+int chutesdados = 0;
 
 void abertura(){
 	printf("/****************/\n");
@@ -22,14 +23,14 @@ void chuta(){
 	char chute;
 	scanf(" %c", &chute);
 
-	chutes[tentativas] = chute;
-	tentativas++; //se nao tiver o (*) vai incrementar o endereco de memoria
+	chutes[chutesdados] = chute;
+	chutesdados++; //se nao tiver o (*) vai incrementar o endereco de memoria
 }
 
 
 int jaachou(char letra){
 	int achou = 0;
-	for (int j = 0; j < tentativas; j++){
+	for (int j = 0; j < chutesdados; j++){
 		if(chutes[j] == letra){
 			achou = 1;
 			break;
@@ -57,6 +58,47 @@ void escolhepalavra(){
 	sprintf(palavrasecreta, "MELANCIA");
 }
 
+int enforcou(){
+	int erros = 0;
+
+	for(int i=0; i< chutesdados; i++){
+		int existe = 0;
+
+		for(int j =0; j < strlen(palavrasecreta); j++){
+			if (chutes[j] == palavrasecreta[i]){
+				existe = 1;
+				break;
+			}
+		}
+		if (!existe) erros++;
+
+	}
+
+	return erros >= 5;
+}
+
+int ganhou(){
+	
+	for(int i=0; i < strlen(palavrasecreta); i++){
+		if(!jachutou(palavrasecreta[i])){
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+int jachutou(char letra){
+	int achou = 0;
+	for(int j = 0; j < chutesdados; j++){
+		if(chutes[j] == letra){
+			achou = 1;
+			break;
+		}
+	}
+	return achou;
+}
+
 int main(){
 
 	abertura();
@@ -64,12 +106,11 @@ int main(){
 	escolhepalavra();
 
 	int acertou = 0;
-	int enforcou = 0;
 
 	do {
 		desenhaforca();
 		chuta();
 
-	} while(!acertou && !enforcou);
+	} while(!ganhou() && !enforcou());
 
 }
