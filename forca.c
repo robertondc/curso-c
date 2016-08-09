@@ -4,7 +4,7 @@
 #include <time.h>
 #include "forca.h"
 
-char palavrasecreta[20];
+char palavrasecreta[TAMANHO_PALAVRA];
 char chutes[26];
 int chutesdados = 0;
 
@@ -130,7 +130,7 @@ void adicionapalavra(){
 
 	if (quer == 'S'){
 
-		char novapalavra[20];
+		char novapalavra[TAMANHO_PALAVRA];
 
 		printf("Digite a nova palavra: \n");
 		scanf("%s", novapalavra);
@@ -170,6 +170,13 @@ int main(){
 		chuta();
 
 	} while(!ganhou() && !enforcou());
+
+	if (ganhou()){
+		printf("Parabens voce ganhou!!! \n");
+	} else {
+		printf("Você foi enforcado! \n");
+		printf("A palavra certa era: %s\n", palavrasecreta);
+	}
 
 	adicionapalavra();
 
